@@ -186,12 +186,16 @@ add_action( 'rest_api_init', 'wp_rest_api_post');
 /**
  * Use * for origin
  */
-function add_allow_header( $headers ) {
-	global $wp;
-	if (preg_match ('/wp-json/',$wp->request)) {
-		$headers['Access-Control-Allow-Origin'] = '*';
-		$headers['Access-Control-Allow-Credentials'] = 'true';
-		return $headers;
-	}
+
+function my_customize_rest_cors() {
+	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+	add_filter( 'rest_pre_serve_request', function( $value ) {
+		header( 'Access-Control-Allow-Origin: *' );
+		header( 'Access-Control-Allow-Methods: GET' );
+		header( 'Access-Control-Allow-Credentials: true' );
+		header( 'Access-Control-Expose-Headers: Link', false );
+		header( 'Access-Control-Allow-Headers: X-Requested-With' );
+		return $value;
+	} );
 }
-add_filter( 'wp_headers', 'add_allow_header' );
+add_action( 'rest_api_init', 'my_customize_rest_cors', 15 );
