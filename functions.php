@@ -77,7 +77,7 @@ function wp_rest_api_article() {
 			};
 			$content = $data['content']['rendered'];
 			$title = $data['title']['rendered'];
-				
+
 			$article_id = $data['id'];
 
 			$post_id = strip_tags(get_the_term_list( $article_id, 'shop_category'));
@@ -186,15 +186,12 @@ add_action( 'rest_api_init', 'wp_rest_api_post');
 /**
  * Use * for origin
  */
-add_action( 'rest_api_init', function() {
-    
-	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
-	add_filter( 'rest_pre_serve_request', function( $value ) {
-		header( 'Access-Control-Allow-Origin: *' );
-		header( 'Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE' );
-		header( 'Access-Control-Allow-Credentials: true' );
-
-		return $value;
-		
-	});
-}, 15 );
+function add_allow_header( $headers ) {
+	global $wp;
+	if (preg_match ('/wp-json/',$wp->request)) {
+		$headers['Access-Control-Allow-Origin'] = '*';
+		$headers['Access-Control-Allow-Credentials'] = 'true';
+		return $headers;
+	}
+}
+add_filter( 'wp_headers', 'add_allow_header' );
