@@ -106,7 +106,7 @@ function wp_rest_api_article() {
 				'releasedDate' => $data['date'],
 				'id' => $article_id,
 				'shop' => $shop,
-				response => $post_id
+				'postId' => $post_id
 			);
 
 			return $new_post;
@@ -187,16 +187,16 @@ add_action( 'rest_api_init', 'wp_rest_api_post');
  * Use * for origin
  */
 
-function my_customize_rest_cors() {
-	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
-	add_filter( 'rest_pre_serve_request', function( $value ) {
-		header( 'Access-Control-Allow-Origin: *' );
-		header( 'Access-Control-Allow-Methods: GET' );
-		header( 'Access-Control-Allow-Credentials: true' );
-		header( 'Access-Control-Expose-Headers: Link', false );
-		header( 'Access-Control-Allow-Headers: Content-Type' );
-		header('Content-type: application/json');
-		return $value;
-	} );
-}
-add_action( 'rest_api_init', 'my_customize_rest_cors', 15 );
+// function my_customize_rest_cors() {
+// 	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+// 	add_filter( 'rest_pre_serve_request', function( $value ) {
+// 		header( 'Access-Control-Allow-Origin: *' );
+// 		header( 'Access-Control-Allow-Methods: GET' );
+// 		header( 'Access-Control-Allow-Credentials: true' );
+// 		header( 'Access-Control-Expose-Headers: Link', false );
+// 		header( 'Access-Control-Allow-Headers: Content-Type' );
+// 		header('Content-type: application/json');
+// 		return $value;
+// 	} );
+// }
+// add_action( 'rest_api_init', 'my_customize_rest_cors', 15 );
